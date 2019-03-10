@@ -3,19 +3,19 @@ services:
   - docker
 
 before_install:
-  - docker build -t expo-lux/m-test -f ./client/Dockerfile.dev ./client
+  - docker build -t expollux/m-test -f ./client/Dockerfile.dev ./client
 
 script:
-  - docker run expo-lux/m-test npm test -- --coverage
+  - docker run expollux/m-test npm test -- --coverage
 
 
 after_success:
-  - docker build -t expo-lux/multi-client ./client
-  - docker build -t expo-lux/multi-nginx ./nginx
-  - docker build -t expo-lux/multi-server ./server
-  - docker build -t expo-lux/multi-worker ./worker
+  - docker build -t expollux/multi-client ./client
+  - docker build -t expollux/multi-nginx ./nginx
+  - docker build -t expollux/multi-server ./server
+  - docker build -t expollux/multi-worker ./worker
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
-  - docker push expo-lux/multi-client
-  - docker push expo-lux/multi-nginx
-  - docker push expo-lux/multi-server
-  - docker push expo-lux/multi-worker
+  - docker push expollux/multi-client
+  - docker push expollux/multi-nginx
+  - docker push expollux/multi-server
+  - docker push expollux/multi-worker
