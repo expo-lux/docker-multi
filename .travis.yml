@@ -1,0 +1,21 @@
+sudo: required
+services:
+  - docker
+
+before_install:
+  - docker build -t expo-lux/m-test -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run expo-lux/m-test npm test -- --coverage
+
+
+after_success:
+  - docker build -t expo-lux/multi-client ./client
+  - docker build -t expo-lux/multi-nginx ./nginx
+  - docker build -t expo-lux/multi-server ./server
+  - docker build -t expo-lux/multi-worker ./worker
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  - docker push expo-lux/multi-client
+  - docker push expo-lux/multi-nginx
+  - docker push expo-lux/multi-server
+  - docker push expo-lux/multi-worker
