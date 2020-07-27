@@ -1,3 +1,7 @@
+env:
+  global:
+    - COMMIT=${TRAVIS_COMMIT::8}
+
 sudo: required
 services:
   - docker
@@ -10,10 +14,10 @@ script:
 
 
 after_success:
-  - docker build -t expollux/multi-client ./client
-  - docker build -t expollux/multi-nginx ./nginx
-  - docker build -t expollux/multi-server ./server
-  - docker build -t expollux/multi-worker ./worker
+  - docker build -t expollux/multi-client:$COMMIT ./client
+  - docker build -t expollux/multi-nginx:$COMMIT ./nginx
+  - docker build -t expollux/multi-server:$COMMIT ./server
+  - docker build -t expollux/multi-worker:$COMMIT ./worker
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
   - docker push expollux/multi-client
   - docker push expollux/multi-nginx
