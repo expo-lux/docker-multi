@@ -9,12 +9,17 @@ services:
   nginx: 
     restart: always
     build: 
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
       context: ./nginx
     ports:
       - '3050:80'
   api:
-    image: expollux/multi-server:d26ed6ae
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./server
+    volumes:
+      - /app/node_modules
+      - ./server:/app
     environment:
       - REDIS_HOST=redis
       - REDIS_PORT=6379
@@ -28,13 +33,23 @@ services:
       - postgres
     restart: on-failure
   client:
-    image: expollux/multi-client:d26ed6ae
+    build: 
+      dockerfile: Dockerfile.dev
+      context: ./client
+    volumes:
+      - /app/node_modules
+      - ./client:/app
     depends_on:
       - api
       - nginx
     restart: on-failure
   worker:
-    image: expollux/multi-worker:d26ed6ae
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./worker
+    volumes:
+      - /app/node_modules
+      - ./worker:/app
     environment:
       - REDIS_HOST=redis
       - REDIS_PORT=6379

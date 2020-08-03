@@ -14,7 +14,7 @@ services:
     ports:
       - '3050:80'
   api:
-    image: expollux/multi-server:d26ed6ae
+    image: stephengrider/multi-server
     environment:
       - REDIS_HOST=redis
       - REDIS_PORT=6379
@@ -28,13 +28,13 @@ services:
       - postgres
     restart: on-failure
   client:
-    image: expollux/multi-client:d26ed6ae
+    image: stephengrider/multi-client
     depends_on:
       - api
       - nginx
     restart: on-failure
   worker:
-    image: expollux/multi-worker:d26ed6ae
+    image: stephengrider/multi-worker
     environment:
       - REDIS_HOST=redis
       - REDIS_PORT=6379
